@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Simple calculator</title>
+</head>
+<style type="text/css">
+	body{
+		background-color: #eee;
+	}
+	#title{
+		text-align: center;
+		font-size: 70px;
+		margin-top: 120px;
+	}
+	#calculator{
+		width: 470px;
+		height: 120px;
+		padding: 80px;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		font-size: 20px;
+	}
+	.formerInput,.laterInput{
+		width: 180px;
+		height: 30px;
+		font-size: 20px;
+		text-align:center;
+	}
+	.btn{
+		width: 50px;
+		height: 30px;
+		font-size: 20px;
+	}
+</style>
+<body>
+	<p id="title">简 易 计 算 器</p>
+	<div id="calculator">
+		<p>
+			<input type="text" class="formerInput" value="5">
+			<span class="sign"> + </span>
+			<input type="text" class="laterInput" value="2">
+			<span> = </span>
+			<span class="resultOutput"> 0 </span>
+		</p>
+		<p>
+			<input type="button" value=" + " class="btn" name="add">
+			<input type="button" value=" - " class="btn" name="subtract">
+			<input type="button" value=" × " class="btn" name="multiply">
+			<input type="button" value=" ÷ " class="btn" name="divide">
+			<input type="button" value=" % " class="btn" name="mod">
+			<input type="button" value=" ^ " class="btn" name="power">
+		</p>
+	</div>
+
+<script type="text/javascript">
+	
+	//获取元素
+	var wrapElem = document.querySelector('#calculator');
+	var calculatorElem = {
+		formerInput: wrapElem.querySelector(".formerInput"),
+		laterInput: wrapElem.querySelector(".laterInput"),
+		sign: wrapElem.querySelector(".sign"),
+		resultOutput: wrapElem.querySelector(".resultOutput"),
+		btns: wrapElem.querySelectorAll(".btn")
+	}
+
+	each(calculatorElem.btns,function(index,elem){	
+		elem.onclick = function(){
+			updateSign(this.value);
+			outputResult(operate(this.name,calculatorElem.formerInput.value,calculatorElem.laterInput.value));
+		};
+	});
+
+
+	//遍历
+	function each(array,fn){
+		for(var i = 0;i < array.length;i++){
+			fn(i,array[i]);
+		}
+	}
+
+	//更新符号
+	function updateSign(symbol){
+		calculatorElem.sign.innerHTML = symbol;
+	}
+
+	//运算
+	function operate(type,num1,num2){
+		if(!operation[type]) throw new Error("不存在名为" + type +"的运算方法！");
+		return operation[type](num1,num2);
+	}
+
+	var operation = {
+		//计算加法
+		add: function(num1,num2){
+			return +num1 + +num2;
+		},
+		//计算减法
+		subtract: function(num1,num2){
+			return num1 - num2;
+		},
+		//计算乘法
+		multiply: function(num1,num2){
+			return num1 * num2;
+		},
+		//计算除法
+		divide: function(num1,num2){
+			return num1 / num2;
+		},
+		mod: function(num1,num2){
+			return num1 % num2;
+		},
+		addOperation: function(type,fn){
+			if(!this[type]){
+				this[type] = fn;
+			}
+			return this;
+		}
+	};
+
+	operation.addOperation('power',function(base,power){
+		return Math.pow(base,power);
+	});
+
+	//输出结果
+	function outputResult(result){
+		calculatorElem.resultOutput.innerHTML = result;
+	}
+
+
+</script>
+</body>
+</html>
